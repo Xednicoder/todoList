@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,13 +13,23 @@ import {
 } from 'react-native';
 import ToDoCard from './ToDoCard';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AppLoading } from 'expo';
 
 const { width } = Dimensions.get('window');
 
 export default function App() {
   const [myToDo, setMyToDo] = useState('');
-  const [myToDoList, setMyToDoList] = useState(['코드카데미 완강하기']);
+  const [myToDoList, setMyToDoList] = useState(['투두앱 완성하기']);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loadedToDo, setLoadedToDo] = useState(false);
+
+  // useEffect = () => {
+  //   loadedToDo(), [];
+  // };
+
+  // const loadedToDo = () => {
+  //   setLoadedToDo(true);
+  // };
 
   const pushToDoItem = () => {
     const getMyToDoList = [...myToDoList];
@@ -27,7 +37,15 @@ export default function App() {
     setMyToDoList(getMyToDoList);
     setMyToDo('');
   };
-
+  if (!loadedToDo) {
+    return (
+      <AppLoading
+        startAsync={this._cacheResourcesAsync}
+        onFinish={() => this.setState({ isReady: true })}
+        onError={console.warn}
+      />
+    );
+  }
   return (
     <>
       <LinearGradient colors={['#ad7ec7', '#ecb3c2']} style={styles.container}>
@@ -71,7 +89,7 @@ export default function App() {
             }}
           />
           <TouchableHighlight
-            style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+            style={{ ...styles.openButton, backgroundColor: '#ffb974' }}
             onPress={() => {
               setModalVisible(!modalVisible);
               pushToDoItem();
@@ -160,7 +178,7 @@ const styles = StyleSheet.create({
   modalView: {
     position: 'absolute',
     top: 300,
-    left: 50,
+    left: 27,
     width: 300,
     height: 130,
     margin: 20,
@@ -170,17 +188,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
+      width: 2,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.35,
     shadowRadius: 3.84,
     elevation: 5,
   },
   openButton: {
-    backgroundColor: '#F194FF',
     borderRadius: 20,
-    padding: 10,
+    padding: 7,
+    paddingRight: 15,
+    paddingLeft: 15,
     elevation: 2,
   },
   textStyle: {

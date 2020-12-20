@@ -26,6 +26,9 @@ export default function ToDoCard(props) {
     setIsEditing(false);
   };
 
+  const handleInput = (text) => {
+    setTodoItem(text);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
@@ -40,7 +43,11 @@ export default function ToDoCard(props) {
           />
         </TouchableOpacity>
         {isEditing ? (
-          <TextInput value={toDoItem} />
+          <TextInput
+            style={styles.inputFixed}
+            value={toDoItem}
+            onChangeText={(text) => handleInput(text)}
+          />
         ) : (
           <Text
             style={[
@@ -53,7 +60,7 @@ export default function ToDoCard(props) {
       </View>
       {isEditing ? (
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={endEditing}>
+          <TouchableOpacity onPress={() => endEditing()}>
             <View style={styles.actionContainer}>
               <Text style={styles.actionButton}>확인</Text>
             </View>
@@ -100,21 +107,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   completedCheckBox: {
-    borderColor: 'gray',
+    borderColor: '#aaaaaa',
   },
   unCompletedCheckBox: {
-    borderColor: 'black',
+    borderColor: '#393939',
   },
   bodyText: {
     fontWeight: '500',
     marginVertical: 20,
   },
   completeBodyText: {
-    color: 'gray',
+    color: '#aaaaaa',
     textDecorationLine: 'line-through',
   },
   unCompleteBodyText: {
-    color: 'black',
+    color: '#393939',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -122,5 +129,9 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     padding: 3,
+  },
+  inputFixed: {
+    height: 57,
+    color: 'gray',
   },
 });
