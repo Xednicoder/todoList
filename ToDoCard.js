@@ -6,19 +6,18 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-
 export default function ToDoCard(props) {
   const [isEditing, setIsEditing] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [toDoItem, setTodoItem] = useState('');
+  const [toDoItem, setTodoItem] = useState(props.text);
 
+  // console.log(props.text);
   const toggleComplete = () => {
     setIsCompleted(!isCompleted);
+    props.changetoggle(isCompleted);
   };
 
   const startEditing = () => {
-    const toDoValue = props.text;
-    setTodoItem(toDoValue);
     setIsEditing(true);
   };
 
@@ -54,13 +53,13 @@ export default function ToDoCard(props) {
               styles.bodyText,
               isCompleted ? styles.completeBodyText : styles.unCompleteBodyText,
             ]}>
-            {props.text}
+            {toDoItem}
           </Text>
         )}
       </View>
       {isEditing ? (
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => endEditing()}>
+          <TouchableOpacity onPress={endEditing}>
             <View style={styles.actionContainer}>
               <Text style={styles.actionButton}>확인</Text>
             </View>
@@ -73,7 +72,7 @@ export default function ToDoCard(props) {
               <Text style={styles.actionButton}>수정</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPressOut={() => props.deleteFunc(props.id)}>
             <View style={styles.actionContainer}>
               <Text style={styles.actionButton}>삭제</Text>
             </View>

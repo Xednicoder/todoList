@@ -13,39 +13,53 @@ import {
 } from 'react-native';
 import ToDoCard from './ToDoCard';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
+import uuid from 'react-native-uuid';
 
 const { width } = Dimensions.get('window');
 
 export default function App() {
   const [myToDo, setMyToDo] = useState('');
-  const [myToDoList, setMyToDoList] = useState(['투두앱 완성하기']);
+  const [myToDoList, setMyToDoList] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [loadedToDo, setLoadedToDo] = useState(false);
 
-  // useEffect = () => {
-  //   loadedToDo(), [];
-  // };
-
-  // const loadedToDo = () => {
-  //   setLoadedToDo(true);
-  // };
+  useEffect(() => {
+    _loadedToDo();
+  }, []);
 
   const pushToDoItem = () => {
-    const getMyToDoList = [...myToDoList];
-    getMyToDoList.push(myToDo);
-    setMyToDoList(getMyToDoList);
+    const ID = uuid.v1();
+    const toDoObject = {
+      [ID]: {
+        id: ID,
+        isCompleted: false,
+        text: myToDo,
+        createdAt: Date.now(),
+      },
+    };
+    setMyToDoList((prevState) => {
+      return { ...prevState, ...toDoObject };
+    });
     setMyToDo('');
   };
+
+  const _loadedToDo = () => {
+    setLoadedToDo(true);
+  };
+
+  const deleteToDoItem = (id) => {
+    const deleteToDo = { ...myToDoList };
+    delete deleteToDo[id];
+    setMyToDoList(deleteToDo);
+  };
+
+  const sortTodoList = () => {};
+
   if (!loadedToDo) {
-    return (
-      <AppLoading
-        startAsync={this._cacheResourcesAsync}
-        onFinish={() => this.setState({ isReady: true })}
-        onError={console.warn}
-      />
-    );
+    return <AppLoading />;
   }
+
   return (
     <>
       <LinearGradient colors={['#ad7ec7', '#ecb3c2']} style={styles.container}>
@@ -64,8 +78,13 @@ export default function App() {
             </View>
           </View>
           <ScrollView contentContainerStyle={styles.toDos}>
-            {myToDoList.map((toDoItem, toDoIndex) => (
-              <ToDoCard key={toDoIndex} text={toDoItem} />
+            {Object.values(myToDoList).map((toDoItem) => (
+              <ToDoCard
+                key={toDoItem.id}
+                deleteFunc={deleteToDoItem}
+                changetoggle={sortTodoList}
+                {...toDoItem}
+              />
             ))}
           </ScrollView>
         </View>
