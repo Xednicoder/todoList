@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableHighlight,
   TextInput,
+  AsyncStorage,
 } from 'react-native';
 import ToDoCard from './ToDoCard';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,7 +29,9 @@ export default function App() {
     _loadedToDo();
   }, []);
 
-  const pushToDoItem = () => {
+  useEffect(() => {}, [myToDoList]);
+
+  const _pushToDoItem = () => {
     const ID = uuid.v1();
     const toDoObject = {
       [ID]: {
@@ -48,13 +51,27 @@ export default function App() {
     setLoadedToDo(true);
   };
 
-  const deleteToDoItem = (id) => {
+  const _deleteToDoItem = (id) => {
     const deleteToDo = { ...myToDoList };
     delete deleteToDo[id];
     setMyToDoList(deleteToDo);
   };
 
-  const sortTodoList = () => {};
+  const _unCompletedTodo = (id) => {
+    const handleCompletedTodo = { ...myToDoList };
+    handleCompletedTodo[id].isCompleted = false;
+    setMyToDoList(handleCompletedTodo);
+  };
+
+  const _completedTodo = (id) => {
+    const handleCompletedTodo = { ...myToDoList };
+    handleCompletedTodo[id].isCompleted = true;
+    setMyToDoList(handleCompletedTodo);
+  };
+
+  // const _saveTodoList = getTodoList => {
+  //   const saveToDOList = AsyncStorage.setItem()
+  // }
 
   if (!loadedToDo) {
     return <AppLoading />;
@@ -78,14 +95,17 @@ export default function App() {
             </View>
           </View>
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(myToDoList).map((toDoItem) => (
-              <ToDoCard
-                key={toDoItem.id}
-                deleteFunc={deleteToDoItem}
-                changetoggle={sortTodoList}
-                {...toDoItem}
-              />
-            ))}
+            {Object.values(myToDoList)
+              .reverse()
+              .map((toDoItem) => (
+                <ToDoCard
+                  key={toDoItem.id}
+                  deleteFunc={_deleteToDoItem}
+                  completedTodo={_completedTodo}
+                  unCompletedTodo={_unCompletedTodo}
+                  {...toDoItem}
+                />
+              ))}
           </ScrollView>
         </View>
         <TouchableHighlight onPress={() => setModalVisible(true)}>
@@ -104,14 +124,14 @@ export default function App() {
             autoCorrect={false}
             onSubmitEditing={() => {
               setModalVisible(!modalVisible);
-              pushToDoItem();
+              _pushToDoItem();
             }}
           />
           <TouchableHighlight
             style={{ ...styles.openButton, backgroundColor: '#ffb974' }}
             onPress={() => {
               setModalVisible(!modalVisible);
-              pushToDoItem();
+              _pushToDoItem();
             }}>
             <Text style={styles.textStyle}>입력</Text>
           </TouchableHighlight>

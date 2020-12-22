@@ -8,13 +8,14 @@ import {
 } from 'react-native';
 export default function ToDoCard(props) {
   const [isEditing, setIsEditing] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
   const [toDoItem, setTodoItem] = useState(props.text);
 
-  // console.log(props.text);
   const toggleComplete = () => {
-    setIsCompleted(!isCompleted);
-    props.changetoggle(isCompleted);
+    if (props.isCompleted) {
+      props.unCompletedTodo(props.id);
+    } else {
+      props.completedTodo(props.id);
+    }
   };
 
   const startEditing = () => {
@@ -35,7 +36,7 @@ export default function ToDoCard(props) {
           <View
             style={[
               styles.checkBox,
-              isCompleted
+              props.isCompleted
                 ? styles.completedCheckBox
                 : styles.unCompletedCheckBox,
             ]}
@@ -51,7 +52,9 @@ export default function ToDoCard(props) {
           <Text
             style={[
               styles.bodyText,
-              isCompleted ? styles.completeBodyText : styles.unCompleteBodyText,
+              props.isCompleted
+                ? styles.completeBodyText
+                : styles.unCompleteBodyText,
             ]}>
             {toDoItem}
           </Text>
