@@ -96,7 +96,20 @@ export default function App() {
           </View>
           <ScrollView contentContainerStyle={styles.toDos}>
             {Object.values(myToDoList)
-              .reverse()
+              .sort(function (a, b) {
+                return b.createdAt - a.createdAt;
+              })
+              .sort(function (a, b) {
+                var completedA = a.isCompleted.toString().toUpperCase();
+                var completedB = b.isCompleted.toString().toUpperCase();
+                if (completedA < completedB) {
+                  return -1;
+                }
+                if (completedA > completedB) {
+                  return 1;
+                }
+                return 0;
+              })
               .map((toDoItem) => (
                 <ToDoCard
                   key={toDoItem.id}
@@ -122,6 +135,7 @@ export default function App() {
             value={myToDo}
             onChangeText={(text) => setMyToDo(text)}
             autoCorrect={false}
+            maxLength={20}
             onSubmitEditing={() => {
               setModalVisible(!modalVisible);
               _pushToDoItem();

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Text,
   View,
+  Image,
   TouchableOpacity,
   StyleSheet,
   TextInput,
@@ -64,7 +65,14 @@ export default function ToDoCard(props) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={endEditing}>
             <View style={styles.actionContainer}>
-              <Text style={styles.actionButton}>확인</Text>
+              <Image
+                style={{
+                  ...styles.iconStyle,
+                  height: 15,
+                  width: 15,
+                }}
+                source={require('./checked.png')}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -72,12 +80,18 @@ export default function ToDoCard(props) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={startEditing}>
             <View style={styles.actionContainer}>
-              <Text style={styles.actionButton}>수정</Text>
+              <Image
+                style={{ ...styles.iconStyle, height: 15, width: 15 }}
+                source={require('./edit.png')}
+              />
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPressOut={() => props.deleteFunc(props.id)}>
             <View style={styles.actionContainer}>
-              <Text style={styles.actionButton}>삭제</Text>
+              <Image
+                style={{ ...styles.iconStyle, height: 15, width: 15 }}
+                source={require('./delete.png')}
+              />
             </View>
           </TouchableOpacity>
         </View>
